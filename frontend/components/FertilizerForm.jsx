@@ -4,6 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 
+
 const FertilizerForm = () => {
   const [formData, setFormData] = useState({
     Location: "mumbai",
@@ -503,6 +504,15 @@ const FertilizerForm = () => {
                 <p class="font-bold text-xl">How to use: </p>
                 <p class="text-lg">{output.how_to_use}</p>
               </div>
+              <div className="mt-4" >
+                <p className="font-bold text-xl">LINK TO BUY:</p>
+                <a href={output.buylink} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                  {output.buylink}
+                </a>
+                <div><img src={output.image} alt="fertilizer image " width="200" height="150" /></div>
+                
+              </div>
+             
               <div className="flex justify-center">
                 <span className="inline-block align-middle">
                   <b className="capitalize"> </b>{" "}

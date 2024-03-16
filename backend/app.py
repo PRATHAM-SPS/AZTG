@@ -52,11 +52,11 @@ from werkzeug.utils import secure_filename
 import speech_recognition as sr
 
 openai.api_key = "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" #os.getenv("OPENAI_API_KEY_IMAGE")
-geminikey = "AIzaSyCs1c2LJvfGaZGQFi5-NrhV8GLASLfqUsI"
+geminikey = "AIzaSyAwYtdZDx-tP7EAjyM6hlXCWOo2nRQ5dTQ"
 genai.configure(api_key=geminikey)  
 
-client = pymongo.MongoClient("mongodb+srv://pratham:kheti1234@cluster0.saiervy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-test_db = client["test"]
+# client = pymongo.MongoClient("mongodb+srv://pratham:kheti1234@cluster0.saiervy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+# test_db = client["test"]
 
 app = Flask(__name__)
 CORS(app)
@@ -326,6 +326,9 @@ def result2():
                 "name": "Compost",
                 # "img": response["data"][0]["url"],
                 "how_to_use": "Compost is easy to make at home using food scraps, yard waste, and other organic materials. You can also purchase compost at garden centers and nurseries. To use compost as a fertilizer, simply mix it into the soil before planting or use it as a top dressing around established plants. \nThat being said, it's always a good idea to do a soil test to determine the specific nutrient needs of your plants and soil. This can help you choose the right organic fertilizer and ensure that your plants are getting the nutrients they need to grow and thrive.",
+                
+                "buylink" : "https://www.bombaygreens.com/products/organic-manure-fertilizer-for-vegetable-plants-with-3-4-4-npk-900-grams",
+                "image" : "https://www.kribhco.net/assets/img/product/compost.jpg"
             }
         elif ans == 1:
             # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer"})
@@ -339,6 +342,8 @@ def result2():
                 "name": "Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer",
                 # "img": response["data"][0]["url"],
                 "how_to_use": "Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer organic components: Fish bone meal | Alfalfa meal | Feather meal | Soft rock phosphate | Mined potassium sulfate | Seaweed extract | Beneficial soil microbes",
+                "buylink" : "https://www.amazon.in/Earth-Organic-Tomato-Vegetable-Fertilizer/dp/B000VZRV4C",
+                "image" : "https://m.media-amazon.com/images/I/718ps0sVhEL._SX679_.jpg"
             }
         elif ans == 2:
             # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth All Purpose Fertilizer"})
@@ -351,7 +356,9 @@ def result2():
             return {
                 "name": "Dr. Earth All Purpose Fertilizer",
                 # "img": response["data"][0]["url"],
-                "how_to_use": "Dr. Earth All Purpose Fertilizer is applied by sprinkling it evenly over prepared soil, then incorporating it gently with a rake or garden tool. Water the area thoroughly afterward. It helps plants by providing essential nutrients, improving soil health, reducing erosion, and enhancing crop yield and quality."
+                "how_to_use": "Dr. Earth All Purpose Fertilizer is applied by sprinkling it evenly over prepared soil, then incorporating it gently with a rake or garden tool. Water the area thoroughly afterward. It helps plants by providing essential nutrients, improving soil health, reducing erosion, and enhancing crop yield and quality.",
+                "buylink": "https://www.amazon.in/Dr-Earth-736P-Organic-Fertilizer/dp/B001F9SGKG",
+                "image" : "https://m.media-amazon.com/images/I/815h9b8FY-S.jpg"
             }
         elif ans == 3:
             # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Jobe's Organics All-Purpose Fertilizer"})
@@ -365,6 +372,8 @@ def result2():
                 "name": "Jobe's Organics All-Purpose Fertilizer",
                 # "img": response["data"][0]["url"],
                 "how_to_use": "Jobe's Organics All-Purpose Fertilizer organic composition: Feather meal | Bone meal | Sulfate of potash | Kelp meal | Alfalfa meal | Humic acid",
+                "buylink" : "https://www.amazon.in/Jobes-Organics-Purpose-Fertilizer-Granular/dp/B003SHEDQY",
+                "image" : "https://m.media-amazon.com/images/I/41ruFc3dXLL._SY445_SX342_QL70_FMwebp_.jpg"
             }
         elif ans == 4:
             # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth Organic Nitrogen Fertilizer"})
@@ -378,6 +387,8 @@ def result2():
                 "name": "Dr. Earth Organic Nitrogen Fertilizer",
                 # "img": response["data"][0]["url"],
                 "how_to_use": "Dr. Earth Organic Nitrogen Fertilizer organic composition: Soybean meal | Alfalfa meal | Fishbone meal | Feather meal | Seabird guano | Blood meal | Kelp meal | Potassium sulfate | Humic acid",
+                "buylink" : "https://raywiegandsnursery.com/products/dr-earth%C2%AE-organic-and-natural-nitrogen-all-purpose-fertilizer",
+                "image" : "https://m.media-amazon.com/images/I/81pCVjmGxkL.__AC_SX300_SY300_QL70_FMwebp_.jpg"
             }
         elif ans == 5:
             # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Espoma Organic Lawn Food"})
@@ -389,8 +400,10 @@ def result2():
             # )
             return {
                 "name": "Espoma Organic Lawn Food",
-                # "img": response["data"][0]["url"],
+                #"img": response["data"][0]["url"],
                 "how_to_use": "Espoma Organic Lawn Food organic composition: Corn gluten meal | Feather meal | Soybean meal | Potassium sulfate | Humates | Iron",
+                "buylink" : "https://www.espoma.com/product-lines/organic-lawn-fertilizers-2/",
+                "image": "https://www.espoma.com/wp-content/uploads/2015/03/espoma_organic-lightning-lime.png"
             }
         else:
             # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"FoxFarm"})
@@ -404,6 +417,8 @@ def result2():
                 "name": "FoxFarm",
                 # "img": response["data"][0]["url"],
                 "how_to_use": "FoxFarm organic composition: Earthworm castings | Bat guano | Fish meal | Bone meal | Blood meal | Feather meal | Kelp meal",
+                "buylink" : "https://www.ubuy.co.in/brand/foxfarm",
+                "image" : "https://foxfarm.com/wp-content/uploads/2019/02/fforiginalplantingmix2019.png"            
             }
 
 @app.route("/fertilizer-predict", methods=["GET"])
@@ -535,7 +550,7 @@ def submit():
             "sname": supplement_name,
             "simage": supplement_image_url,
             "buy_link": supplement_buy_link,
-            "how_to_use": response.text,
+            "how_to_use": (response.text),
         }
 
 @app.route("/more-info",methods = ["GET"])
@@ -662,19 +677,14 @@ def process_voice_input():
         return jsonify({"user_input": user_input})
     except Exception as e:
         return jsonify({"error": str(e)})
-geminikey = "AIzaSyCs1c2LJvfGaZGQFi5-NrhV8GLASLfqUsI"
-genai.configure(api_key=geminikey)
 
 @app.route('/get_bot_response', methods=['POST'])
 def get_bot_response():
     user_message = request.json.get('userMessage', '')
     print(user_message)
-
-
     
     # Use Gem AI to generate a response
-    pf = f'''you are a faremer and you are growing crops and you want to know about the fertilizer to use for your crops
-            you are farmers friend
+    pf = f'''you are a chatbot to help a farmer with his queries within 50 words.
             
 
             Sentence = {user_message}'''

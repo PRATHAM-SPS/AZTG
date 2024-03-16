@@ -1,10 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from "@mui/styles";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-
 
 const theme = createTheme();
 
@@ -53,72 +52,39 @@ const ChatBott = () => {
 
   const handleSendMessage = async () => {
     if (inputMessage.trim() !== '') {
-      setChatMessages((prevMessages) => [
-        ...prevMessages,
-        { type: 'user', text: inputMessage },
-        // { type: 'bot', text: handleVoiceOutput(getBotResponse(inputMessage)) },
-        getBotResponse(inputMessage)
-      ]);
-
+      const userMessage = inputMessage.trim();
+      setChatMessages(prevMessages => [...prevMessages, { type: 'user', text: userMessage }]);
+      
       try {
-        const response = await axios.post('http://localhost:5000/get_bot_response', {
-          userMessage: inputMessage,
-        });
+        const response = await axios.post('http://localhost:5000/get_bot_response', { userMessage });
         const botResponse = response.data.botResponse;
-        console.log(botResponse);
-       
-        console.log("transaction saved")
-
-
-        //
-        setChatMessages((prevMessages) => [
-          ...prevMessages,
-          { type: 'bot', text: botResponse },
-        ]);
+        setChatMessages(prevMessages => [...prevMessages, { type: 'bot', text: botResponse }]);
+        handleVoiceOutput(botResponse); // Voicing out the bot response
       } catch (error) {
         console.error('Error fetching bot response:', error);
       }
       setInputMessage('');
-      // Add voice output for bot's response
-      // handleVoiceOutput(getBotResponse(inputMessage));
     }
   };
 
-  const handleVoiceInput = () => {
+  const handleVoiceInput = async () => {
     const recognition = new window.webkitSpeechRecognition() || new window.SpeechRecognition();
-
     recognition.lang = 'en-US';
     recognition.start();
 
     recognition.onresult = async (event) => {
-      const userVoiceInput = event.results[0][0].transcript;
+      const userVoiceInput = event.results[0][0].transcript.trim();
+      setInputMessage(userVoiceInput);
 
-      // const h = await handleVoiceOutput(getBotResponse());
       try {
-        const response = await axios.post('http://localhost:5000/get_bot_response', {
-          userMessage: userVoiceInput,
-        });
+        const response = await axios.post('http://localhost:5000/get_bot_response', { userMessage: userVoiceInput });
         const botResponse = response.data.botResponse;
-        console.log(botResponse);
-     
-
-        console.log("transaction saved")
-
-
-        //
-        setChatMessages((prevMessages) => [
-          ...prevMessages,
-          { type: 'user', text: userVoiceInput },
-          // { type: 'bot', text: h },
-        ]);
-
-        getBotResponse(userVoiceInput)
+        setChatMessages(prevMessages => [...prevMessages, { type: 'user', text: userVoiceInput }]);
+        setChatMessages(prevMessages => [...prevMessages, { type: 'bot', text: botResponse }]);
+        handleVoiceOutput(botResponse); // Voicing out the bot response
       } catch (error) {
         console.error('Error fetching bot response:', error);
       }
-
-
-
     };
 
     recognition.onend = () => {
@@ -133,27 +99,6 @@ const ChatBott = () => {
 
     synth.speak(utterance);
   };
-
-
-  const getBotResponse = async (userInput) => {
-    // Implement your chatbot logic here
-    // For simplicity, use a predefined response
-
-
-    const response = await axios.post('http://localhost:5000/get_bot_response', {
-      userMessage: userInput,
-    });
-
-    const botResponse = response.data.botResponse;
-    console.log(typeof botResponse);
-
-    handleVoiceOutput(botResponse);
-    setChatMessages((prevMessages) => [
-      ...prevMessages,
-      { type: 'bot', text: botResponse },
-    ]);
-  };
-
 
   return (
     <ThemeProvider theme={theme}>
