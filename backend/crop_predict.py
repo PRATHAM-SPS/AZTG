@@ -8,9 +8,9 @@ import requests
 import datetime
 import pymongo
 
-import openai
+# import openai
 
-openai.api_key = "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" #os.getenv("OPENAI_API_KEY_IMAGE")
+# openai.api_key = "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" #os.getenv("OPENAI_API_KEY_IMAGE")
 
 
 class Crop_Predict(object):
@@ -43,8 +43,8 @@ class Crop_Predict(object):
             K = request.json["K"]
             pH = request.json["PH"]
             location = request.json["Location"]
-            client = pymongo.MongoClient("mongodb+srv://pratham:kheti1234@cluster0.saiervy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-            test_db = client["test"]
+            # client = pymongo.MongoClient("mongodb+srv://pratham:kheti1234@cluster0.saiervy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+            # test_db = client["test"]
 
             print(location)
 
@@ -157,22 +157,22 @@ class Crop_Predict(object):
                     if row["temp"] >= temp2 and row["temp"] <= temp1:
                         if row["climate"] == climate:
                             lt.append(row["Crop"])
-                            response = openai.Image.create(
-                                prompt=row["Crop"],
-                                n=1,
-                                size="256x256",
-                            )
-                            image_list.append(response["data"][0]["url"])
+                            # response = openai.Image.create(
+                            #     prompt=row["Crop"],
+                            #     n=1,
+                            #     size="256x256",
+                            # )
+                            image_list.append(1)
 
             for i in range(len(lt)):
-                dict[lt[i]] = image_list[i]
+                dict[lt[i]] = 1
 
             newList = []
             for i in range(len(dict)):
                 newList.append(
                     {"name": list(dict.keys())[i], "img": list(dict.values())[i]}
                 )
-            test_db["crop_recommendation"].insert_one({"input":{"N":N,"P":P,"K":K,"PH":pH,"Location":location},"output":list(dict.keys())})
+            # test_db["crop_recommendation"].insert_one({"input":{"N":N,"P":P,"K":K,"PH":pH,"Location":location},"output":list(dict.keys())})
             print(newList)
             return newList
 

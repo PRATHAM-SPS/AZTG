@@ -49,9 +49,10 @@ from tensorflow.keras.applications.resnet50 import preprocess_input
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from werkzeug.utils import secure_filename
+import speech_recognition as sr
 
 openai.api_key = "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" #os.getenv("OPENAI_API_KEY_IMAGE")
-geminikey = "AIzaSyDeIMfblCzN3zfBl9CBt8n12HvjQYhRANQ"
+geminikey = "AIzaSyCs1c2LJvfGaZGQFi5-NrhV8GLASLfqUsI"
 genai.configure(api_key=geminikey)  
 
 client = pymongo.MongoClient("mongodb+srv://pratham:kheti1234@cluster0.saiervy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
@@ -205,6 +206,7 @@ def FertilizerPredictor(to_predict_list):
     to_predict = np.array([to_predict_list])
     loaded_model = pickle.load(open("models/classifier.pkl", "rb"))
     result = loaded_model.predict(to_predict)
+    print(result)
     return result[0]
 
 
@@ -273,9 +275,9 @@ def crop():
 @app.route("/crop-predict",methods=["GET"])
 def get_crops():
     results = []
-    for dat in data:
-        i = test_db["crop_recommendation"].count_documents({"output":{"$in":[dat]}})
-        results.append(i if i is not None else 0)
+    # for dat in data:
+    #     i = test_db["crop_recommendation"].count_documents({"output":{"$in":[dat]}})
+    #     results.append(i if i is not None else 0)
     # dat = data.to_dict()
     return jsonify({
         "labels":data.to_list(),
@@ -314,98 +316,93 @@ def result2():
 
         fertilizer_info = {"name": "", "img": ""}
         if ans == 0:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Compost"})
-            response = openai.Image.create(
-                prompt="compost from food scraps, yard waste",
-                n=1,
-                size="256x256",
-            )
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Compost"})
+            # response = openai.Image.create(
+            #     prompt="compost from food scraps, yard waste",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "Compost",
-                "img": response["data"][0]["url"],
+                # "img": response["data"][0]["url"],
                 "how_to_use": "Compost is easy to make at home using food scraps, yard waste, and other organic materials. You can also purchase compost at garden centers and nurseries. To use compost as a fertilizer, simply mix it into the soil before planting or use it as a top dressing around established plants. \nThat being said, it's always a good idea to do a soil test to determine the specific nutrient needs of your plants and soil. This can help you choose the right organic fertilizer and ensure that your plants are getting the nutrients they need to grow and thrive.",
             }
         elif ans == 1:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer"})
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer"})
 
-            response = openai.Image.create(
-                prompt="Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer",
-                n=1,
-                size="256x256",
-            )
+            # response = openai.Image.create(
+            #     prompt="Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer",
-                "img": response["data"][0]["url"],
+                # "img": response["data"][0]["url"],
                 "how_to_use": "Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer organic components: Fish bone meal | Alfalfa meal | Feather meal | Soft rock phosphate | Mined potassium sulfate | Seaweed extract | Beneficial soil microbes",
             }
         elif ans == 2:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth All Purpose Fertilizer"})
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth All Purpose Fertilizer"})
 
-            response = openai.Image.create(
-                prompt="Dr. Earth All Purpose Fertilizer",
-                n=1,
-                size="256x256",
-            )
+            # response = openai.Image.create(
+            #     prompt="Dr. Earth All Purpose Fertilizer",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "Dr. Earth All Purpose Fertilizer",
-                "img": response["data"][0]["url"],
-                "how_to_use": openai.Completion.create(
-                            model="gpt-3.5-turbo",
-                            prompt=f"how to use Dr. Earth All Purpose Fertilizer and how it helps the soil and crop growth",
-                            max_tokens=1000,
-                            temperature=0,
-                            )
+                # "img": response["data"][0]["url"],
+                "how_to_use": "Dr. Earth All Purpose Fertilizer is applied by sprinkling it evenly over prepared soil, then incorporating it gently with a rake or garden tool. Water the area thoroughly afterward. It helps plants by providing essential nutrients, improving soil health, reducing erosion, and enhancing crop yield and quality."
             }
         elif ans == 3:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Jobe's Organics All-Purpose Fertilizer"})
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Jobe's Organics All-Purpose Fertilizer"})
 
-            response = openai.Image.create(
-                prompt="Jobe's Organics All-Purpose Fertilizer",
-                n=1,
-                size="256x256",
-            )
+            # response = openai.Image.create(
+            #     prompt="Jobe's Organics All-Purpose Fertilizer",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "Jobe's Organics All-Purpose Fertilizer",
-                "img": response["data"][0]["url"],
+                # "img": response["data"][0]["url"],
                 "how_to_use": "Jobe's Organics All-Purpose Fertilizer organic composition: Feather meal | Bone meal | Sulfate of potash | Kelp meal | Alfalfa meal | Humic acid",
             }
         elif ans == 4:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth Organic Nitrogen Fertilizer"})
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Dr. Earth Organic Nitrogen Fertilizer"})
 
-            response = openai.Image.create(
-                prompt="Dr. Earth Organic Nitrogen Fertilizer",
-                n=1,
-                size="256x256",
-            )
+            # response = openai.Image.create(
+            #     prompt="Dr. Earth Organic Nitrogen Fertilizer",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "Dr. Earth Organic Nitrogen Fertilizer",
-                "img": response["data"][0]["url"],
+                # "img": response["data"][0]["url"],
                 "how_to_use": "Dr. Earth Organic Nitrogen Fertilizer organic composition: Soybean meal | Alfalfa meal | Fishbone meal | Feather meal | Seabird guano | Blood meal | Kelp meal | Potassium sulfate | Humic acid",
             }
         elif ans == 5:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Espoma Organic Lawn Food"})
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"Espoma Organic Lawn Food"})
 
-            response = openai.Image.create(
-                prompt="Espoma Organic Lawn Food",
-                n=1,
-                size="256x256",
-            )
+            # response = openai.Image.create(
+            #     prompt="Espoma Organic Lawn Food",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "Espoma Organic Lawn Food",
-                "img": response["data"][0]["url"],
+                # "img": response["data"][0]["url"],
                 "how_to_use": "Espoma Organic Lawn Food organic composition: Corn gluten meal | Feather meal | Soybean meal | Potassium sulfate | Humates | Iron",
             }
         else:
-            test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"FoxFarm"})
+            # test_db["fertilizer_recommendation"].insert_one({"input":to_predict,"output":"FoxFarm"})
 
-            response = openai.Image.create(
-                prompt="FoxFarm",
-                n=1,
-                size="256x256",
-            )
+            # response = openai.Image.create(
+            #     prompt="FoxFarm",
+            #     n=1,
+            #     size="256x256",
+            # )
             return {
                 "name": "FoxFarm",
-                "img": response["data"][0]["url"],
+                # "img": response["data"][0]["url"],
                 "how_to_use": "FoxFarm organic composition: Earthworm castings | Bat guano | Fish meal | Bone meal | Blood meal | Feather meal | Kelp meal",
             }
 
@@ -415,7 +412,7 @@ def get_fertilizer_predict():
     fertilizers = ["Compost","Dr. Earth Organic 5 Tomato, Vegetable & Herb Fertilizer","Dr. Earth All Purpose Fertilizer","Jobe's Organics All-Purpose Fertilizer","Dr. Earth Organic Nitrogen Fertilizer","Espoma Organic Lawn Food","FoxFarm"]
     results = []
     for fertilizer in fertilizers:
-        i = test_db["fertilizer_recommendation"].count_documents({"output":fertilizer})
+        # i = test_db["fertilizer_recommendation"].count_documents({"output":fertilizer})
         results.append(i if i is not None else 0)
     result = {
         "labels":fertilizers,
@@ -546,14 +543,17 @@ def get_info():
     prev_in = request.args.get("prev_in")
     user_in = request.args.get("user_in") if request.args.get("user_in")!=None or str(request.args.get("user_in"))!=""  else "describe in more detail following steps"
     print(prev_in,user_in)
-    instructions = openai.Completion.create(
-    model="text-davinci-003",
-    prompt=str(user_in) + "in context of" + str(prev_in),
-    max_tokens=2048,
-    )
-    print(instructions.choices[0].text)
+    pf=str(user_in) + "in context of" + str(prev_in),
+    model = genai.GenerativeModel('gemini-1.0-pro')
+    response = model.generate_content(pf)
+    print(response.text)
+    
+    
+    
+    
+    print(response.text)
     return jsonify({
-        "instructions":instructions.choices[0].text
+        "instructions":response.text
     })    
 
 
@@ -612,13 +612,17 @@ def forecast():
 
     temperature = forecast[0]["temperature"]
     # openai.api_key = os.getenv("OPENAI_API_KEY")
-    instructions = openai.Completion.create(
-        model="text-davinci-003",
-        prompt=f"aggricultural conditions based on {temperature} kelvin and {climate} climate",
-        max_tokens=1000,
-        temperature=0,
-    )
-    analysis = instructions.choices[0].text
+
+    #GEMINI-PRO-WEATHER
+
+    prompt=f" give me in short agricultural conditions based on {temperature} kelvin and {climate} climate in 100 words"
+    model = genai.GenerativeModel('gemini-1.0-pro')
+
+    response = model.generate_content(prompt)
+    analysis = response.text
+    # max_words = 100 
+    # words = analysis.split()
+    # truncated_analysis = ' '.join(words[:max_words])
     forecast = json.dumps(forecast)
     # Return the forecast to the user
     return [forecast, analysis]
@@ -642,6 +646,50 @@ def getnews():
 
     return articles
 
+@app.route('/voice_input', methods=['POST'])
+def process_voice_input():
+    try:
+        voice_file = request.files['voice']
+        recognizer = sr.Recognizer()
+
+        with sr.AudioFile(voice_file) as source:
+            audio_data = recognizer.record(source)
+
+        user_input = recognizer.recognize_google(audio_data)
+        print("hsgygdsyfgydgfygdsyf")
+        # Now, you can use the user_input as needed in your application logic
+
+        return jsonify({"user_input": user_input})
+    except Exception as e:
+        return jsonify({"error": str(e)})
+geminikey = "AIzaSyCs1c2LJvfGaZGQFi5-NrhV8GLASLfqUsI"
+genai.configure(api_key=geminikey)
+
+@app.route('/get_bot_response', methods=['POST'])
+def get_bot_response():
+    user_message = request.json.get('userMessage', '')
+    print(user_message)
+
+
+    
+    # Use Gem AI to generate a response
+    pf = f'''you are a faremer and you are growing crops and you want to know about the fertilizer to use for your crops
+            you are farmers friend
+            
+
+            Sentence = {user_message}'''
+    model = genai.GenerativeModel('gemini-1.0-pro')
+    response = model.generate_content(pf)
+    generated_text = response.text
+    print(generated_text)
+
+    items = generated_text.split(',')
+
+    
+    # Return the generated response from Gem AI
+    return jsonify({'botResponse': generated_text})
+
+
 
 if __name__ == "__main__":
-    app.run()
+    app.run(port=5000 , debug=True)
