@@ -10,7 +10,7 @@ const theme = createTheme();
 
 const useStyles = makeStyles(() => ({
   chatContainer: {
-    maxWidth: 500,
+    Width: '100%',
     margin: "0 auto",
     padding: 20,
     borderRadius: 8,
