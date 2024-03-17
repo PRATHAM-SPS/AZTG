@@ -18,7 +18,7 @@ export default function Chatbott() {
     return <h2 style={{ marginTop: 100, textAlign: "center" }}>LOADING...</h2>;
   }
   return (
-    <Admin title="CHATROOM HAI YEE" headerText="chat room it is">
+    <Admin title="CHATROOM" headerText="Welcome to KissanTalks, Chat with your farming buddies">
       <div style={{zIndex:10, position:"relative"}}>
         <iframe
           src="http://localhost:8080/index.html"

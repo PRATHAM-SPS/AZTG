@@ -20,8 +20,8 @@ export default function Dashboard() {
   }
   return (
     <Admin
-      title="Disease Detection"
-      headerText="Upload Image to detect crop disease"
+      title="Dashboard"
+      headerText="Statistics of the crops and diseases"
     >
       <div className="flex flex-wrap mt-4 justify-center">
         <div className="w-full mb-12 xl:mb-0 px-4">
