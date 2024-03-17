@@ -1,21 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Chart from "chart.js";
-import { useState,useEffect } from "react";
 
 export default function CardBarChart() {
   const [chartData, setChartData] = useState({
-    "labels":[],
-    "datasets":[],
-    "xlabel":"xlabel",
-    "ylabel":"ylabel"
+    labels: ["Label 1", "Label 2", "Label 3", "Label 4", "Label 5"],
+    datasets: [10, 20, 30, 40, 50], // Hardcoded data for datasets
+    xlabel: "xlabel",
+    ylabel: "ylabel"
   });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://127.0.0.1:5000/disease-predict");
         const data = await response.json();
         setChartData(data);
-        console.log(data)
+        console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -32,33 +32,30 @@ export default function CardBarChart() {
     const myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: chartData["labels"],
+        labels: chartData.labels,
         datasets: [
           {
             label: "Frequency",
-            data: chartData["datasets"],
+            data: chartData.datasets,
             backgroundColor: "rgba(54, 162, 235, 0.2)",
             borderColor: "rgba(54, 162, 235, 1)",
-            borderWidth: 1,
-          },
-        ],
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         scales: {
           yAxes: [
             {
               ticks: {
-                beginAtZero: true,
-              },
-            },
-          ],
-        },
-      },
+                beginAtZero: true
+              }
+            }
+          ]
+        }
+      }
     });
   }, [chartData]);
 
-  return (
-    <canvas id="myChart2"></canvas>
-  );
+  return <canvas id="myChart2"></canvas>;
 }
-

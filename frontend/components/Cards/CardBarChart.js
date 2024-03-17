@@ -1,28 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Chart from "chart.js";
-import { useState,useEffect } from "react";
 
 export default function CardBarChart() {
   const [chartData, setChartData] = useState({
-    "labels":[],
-    "datasets":[],
-    "xlabel":"xlabel",
-    "ylabel":"ylabel"
+    labels: ["January", "February", "March", "April", "May"],
+    datasets: [65, 59, 80, 81, 56],
+    xlabel: "xlabel",
+    ylabel: "ylabel",
   });
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:5000/fertilizer-predict");
-        const data = await response.json();
-        setChartData(data);
-        console.log(data)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     // Get the canvas element
@@ -32,11 +17,11 @@ export default function CardBarChart() {
     const myChart = new Chart(ctx, {
       type: "bar",
       data: {
-        labels: chartData["labels"],
+        labels: chartData.labels,
         datasets: [
           {
             label: "Frequency",
-            data: chartData["datasets"],
+            data: chartData.datasets,
             backgroundColor: "rgba(54, 162, 235, 0.2)",
             borderColor: "rgba(54, 162, 235, 1)",
             borderWidth: 1,
@@ -55,10 +40,12 @@ export default function CardBarChart() {
         },
       },
     });
+    
+    // Cleanup function to prevent memory leaks
+    return () => {
+      myChart.destroy();
+    };
   }, [chartData]);
 
-  return (
-    <canvas id="myChart"></canvas>
-  );
+  return <canvas id="myChart"></canvas>;
 }
-
